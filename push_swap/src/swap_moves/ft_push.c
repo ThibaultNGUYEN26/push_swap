@@ -6,13 +6,13 @@
 /*   By: thibnguy <thibnguy@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/02/20 19:49:04 by thibnguy          #+#    #+#             */
-/*   Updated: 2023/02/20 19:53:33 by thibnguy         ###   ########.fr       */
+/*   Updated: 2023/02/20 21:06:22 by thibnguy         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../../includes/push_swap.h"
 
-void	ft_push(t_node **stack_a, t_node **stack_b)
+void	ft_push(t_node **stack_a, t_node **stack_b, char *move)
 {
 	t_node	*tmp;
 
@@ -27,4 +27,5 @@ void	ft_push(t_node **stack_a, t_node **stack_b)
 		(*stack_a)->prev = tmp;
 	tmp->prev = NULL;
 	*stack_a = tmp;
+	ft_printf("%s\n", move);
 }
