@@ -6,13 +6,13 @@
 /*   By: thibnguy <thibnguy@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/02/20 19:30:18 by thibnguy          #+#    #+#             */
-/*   Updated: 2023/02/20 19:48:56 by thibnguy         ###   ########.fr       */
+/*   Updated: 2023/02/20 21:07:24 by thibnguy         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../../includes/push_swap.h"
 
-void	ft_rrotate(t_node **stack)
+void	ft_rrotate(t_node **stack, char *move)
 {
 	t_node	*tmp;
 	t_node	*prev_node;
@@ -28,4 +28,5 @@ void	ft_rrotate(t_node **stack)
 	tmp->next = *stack;
 	(*stack)->prev = tmp;
 	*stack = tmp;
+	ft_printf("%s\n", move);
 }
