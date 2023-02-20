@@ -6,7 +6,7 @@
 /*   By: thibnguy <thibnguy@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/02/20 17:14:20 by thibnguy          #+#    #+#             */
-/*   Updated: 2023/02/20 20:11:37 by thibnguy         ###   ########.fr       */
+/*   Updated: 2023/02/20 21:10:47 by thibnguy         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -34,8 +34,9 @@ static void	*addlast_node(t_node **node_ref, int content)
 	return (new_node);
 }
 
-static void	print_list(t_node *node)
+static void	print_list(t_node *node, char *stack)
 {
+	ft_printf("%s : ", stack);
 	while (node != NULL)
 	{
 		ft_printf("%d ", node->content);
@@ -65,72 +66,29 @@ int	main(int argc, char *argv[])
 	a = NULL;
 	b = NULL;
 	i = 0;
+	if (argc <= 2)
+	{
+		free_list(a);
+		free_list(b);
+		return (0);
+	}
 	if (argc > 1)
 	{
 		while (++i != argc)
 			addlast_node(&a, ft_atoi(argv[i]));
 		ft_printf("Linked list : ");
-		print_list(a);
-		ft_swap(&a);
-		ft_printf("sa        a : ");
-		print_list(a);
-		ft_printf("          b : ");
-		print_list(b);
-		/* ft_push(&b, &a);
-		ft_printf("pa        a : ");
-		print_list(a);
-		ft_printf("          b : ");
-		print_list(b);
-		ft_rotate(&a);
-		ft_printf("ra        a : ");
-		print_list(a);
-		ft_printf("          b : ");
-		print_list(b);
-		ft_push(&b, &a);
-		ft_printf("pa        a : ");
-		print_list(a);
-		ft_printf("          b : ");
-		print_list(b);
-		ft_swap(&a);
-		ft_printf("sa        a : ");
-		print_list(a);
-		ft_printf("          b : ");
-		print_list(b);
-		ft_push(&b, &a);
-		ft_printf("pb        a : ");
-		print_list(a);
-		ft_printf("          b : ");
-		print_list(b);
-		ft_push(&b, &a);
-		ft_printf("pb        a : ");
-		print_list(a);
-		ft_printf("          b : ");
-		print_list(b);
-		ft_rrotate(&b);
-		ft_printf("rrb       a : ");
-		print_list(a);
-		ft_printf("          b : ");
-		print_list(b);
-		ft_push(&a, &b);
-		ft_printf("pa        a : ");
-		print_list(a);
-		ft_printf("          b : ");
-		print_list(b);
-		ft_push(&a, &b);
-		ft_printf("pa        a : ");
-		print_list(a);
-		ft_printf("          b : ");
-		print_list(b);
-		ft_push(&a, &b);
-		ft_printf("pa        a : ");
-		print_list(a);
-		ft_printf("          b : ");
-		print_list(b);
-		ft_push(&a, &b);
-		ft_printf("pa        a : ");
-		print_list(a);
-		ft_printf("          b : ");
-		print_list(b); */
+		print_list(a, "Linked list");
+		print_list(a, "a");
+		print_list(b, "b");
+		ft_push(&b, &a, "PB");
+		print_list(a, "a");
+		print_list(b, "b");
+		ft_swap(&a, "SA");
+		print_list(a, "a");
+		print_list(b, "b");
+		ft_rotate(&a, "RA");
+		print_list(a, "a");
+		print_list(b, "b");
 	}
 	free_list(a);
 	free_list(b);
