@@ -6,24 +6,67 @@
 /*   By: thibnguy <thibnguy@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/16 19:37:09 by thibnguy          #+#    #+#             */
-/*   Updated: 2023/03/17 11:45:49 by thibnguy         ###   ########.fr       */
+/*   Updated: 2023/03/24 17:49:56 by thibnguy         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../../includes/push_swap.h"
 
-int	ft_not_in_tab(int *tab, int size, int element)
+int	ft_exists(int *tab, int size, int content)
 {
 	int	i;
 
 	i = 0;
 	while (i < size)
 	{
-		if (tab[i] == element)
-			return (0);
+		if (tab[i] == content)
+			return (1);
 		i++;
 	}
-	return (1);
+	return (0);
+}
+
+int	*ft_pack_min(t_node **a)
+{
+	t_node	*first_a;
+	int		min;
+	int		*tab_min;
+	int		i;		
+
+	i = 0;
+	first_a = *a;
+	tab_min = malloc(sizeof(int) * ft_size_stack(a));
+	if (!tab_min)
+		return (NULL);
+	while (i < ft_size_stack(a))
+	{
+		while (ft_exists(tab_min, i, (*a)->content))
+			*a = (*a)->next;
+		min = (*a)->content;
+		*a = (*a)->next;
+		while (*a != first_a)
+		{
+			if ((*a)->content < min && !ft_exists(tab_min, i, (*a)->content))
+				min = (*a)->content;
+			*a = (*a)->next;
+		}
+		tab_min[i++] = min;
+	}
+	return (tab_min);
+}
+
+int	ft_exists_index(int *tab, int size, int element, int index)
+{
+	int	i;
+
+	i = index;
+	while (i < size)
+	{
+		if (tab[i] == element)
+			return (1);
+		i++;
+	}
+	return (0);
 }
 
 t_node	*ft_max_stack(t_node **a)
@@ -41,47 +84,4 @@ t_node	*ft_max_stack(t_node **a)
 		*a = (*a)->next;
 	}
 	return (max);
-}
-
-t_node	*ft_min_stack(t_node **a)
-{
-	t_node	*min;
-	t_node	*first;
-
-	min = *a;
-	first = *a;
-	*a = (*a)->next;
-	while (*a != first)
-	{
-		if ((min)->content > (*a)->content)
-			min = *a;
-		*a = (*a)->next;
-	}
-	return (min);
-}
-
-int	*ft_pack_max(t_node **a, int pack_size, int *tab_max, int i)
-{
-	t_node	*first;
-	t_node	*max;
-
-	first = *a;
-	while (pack_size != 0)
-	{
-		*a = first;
-		while (!ft_not_in_tab(tab_max, i, (*a)->content))
-			*a = (*a)->next;
-		max = *a;
-		*a = (*a)->next;
-		while (*a != first)
-		{
-			if (((*a)->content > (max)->content)
-				&& ft_not_in_tab(tab_max, i, (*a)->content))
-				max = *a;
-			*a = (*a)->next;
-		}
-		pack_size--;
-		tab_max[i++] = (max)->content;
-	}
-	return (tab_max);
 }
