@@ -1,87 +1,158 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   ft_big_sort_utils.c                                :+:      :+:    :+:   */
+/*   ft_big_sort_utils2.c                               :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: thibnguy <thibnguy@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2023/03/16 19:37:09 by thibnguy          #+#    #+#             */
-/*   Updated: 2023/03/24 17:49:56 by thibnguy         ###   ########.fr       */
+/*   Created: 2023/03/17 11:45:22 by thibnguy          #+#    #+#             */
+/*   Updated: 2023/03/25 01:06:42 by thibnguy         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../../includes/push_swap.h"
 
-int	ft_exists(int *tab, int size, int content)
+static int	ft_iter_rotate(t_node **s, int max)
 {
-	int	i;
+	t_node	*first;
+	int		count_rotate;
 
-	i = 0;
-	while (i < size)
+	first = *s;
+	count_rotate = 0;
+	while (1)
 	{
-		if (tab[i] == content)
-			return (1);
-		i++;
+		if ((*s)->content == max)
+			break ;
+		count_rotate++;
+		*s = (*s)->next;
 	}
-	return (0);
+	*s = first;
+	return (count_rotate);
 }
 
-int	*ft_pack_min(t_node **a)
+static int	ft_iter_reverse(t_node **s, int max)
+{
+	t_node	*first;
+	int		count_reverse;
+
+	first = *s;
+	*s = (first)->prev;
+	count_reverse = 0;
+	while (1)
+	{
+		if ((*s)->content == max)
+			break ;
+		count_reverse++;
+		*s = (*s)->prev;
+	}
+	*s = first;
+	return (count_reverse);
+}
+
+void	ft_search(t_node **s, int max, int min)
+{
+	t_node	*first;
+	int		i;
+	int		count_rotate;
+	int		count_reverse;
+
+	i = 0;
+	first = *s;
+	count_rotate = 0;
+	count_reverse = 0;
+	/* count_rotate = ft_iter_rotate(s, max);
+	if (count_rotate == 0)
+		return ;
+	count_reverse = ft_iter_reverse(s, max); */
+	while (1)
+	{
+		if ((*s)->content == max || (*s)->content == min)
+			break ;
+		count_rotate++;
+		*s = (*s)->next;
+	}
+	*s = first;
+	if (count_rotate == 0)
+		return ;
+	*s = (first)->prev;
+	while (1)
+	{
+		if ((*s)->content == max || (*s)->content == min)
+			break ;
+		count_reverse++;
+		*s = (*s)->prev;
+	}
+	*s = first;
+	if (count_rotate <= count_reverse)
+	{
+		i = 0;
+		while (i++ < count_rotate)
+			ft_rotate(s, "b");
+	}
+	else if (count_rotate > count_reverse)
+	{
+		i = 0;
+		while (i++ < count_reverse + 1)
+			ft_rrotate(s, "b");
+	}
+}
+
+void	ft_closest(t_node **a, int *tab, int pack_size, int index)
 {
 	t_node	*first_a;
-	int		min;
-	int		*tab_min;
-	int		i;		
+	int		i;
+	int		count_rotate;
+	int		count_reverse;
 
-	i = 0;
 	first_a = *a;
-	tab_min = malloc(sizeof(int) * ft_size_stack(a));
-	if (!tab_min)
-		return (NULL);
-	while (i < ft_size_stack(a))
+	count_reverse = 0;
+	count_rotate = 0;
+	while (!ft_exists_index(tab, pack_size, (*a)->content, index))
 	{
-		while (ft_exists(tab_min, i, (*a)->content))
-			*a = (*a)->next;
-		min = (*a)->content;
+		count_rotate++;
 		*a = (*a)->next;
-		while (*a != first_a)
-		{
-			if ((*a)->content < min && !ft_exists(tab_min, i, (*a)->content))
-				min = (*a)->content;
-			*a = (*a)->next;
-		}
-		tab_min[i++] = min;
 	}
-	return (tab_min);
+	*a = (first_a)->prev;
+	while (!ft_exists_index(tab, pack_size, (*a)->content, index))
+	{
+		count_reverse++;
+		*a = (*a)->prev;
+	}
+	*a = first_a;
+	if (count_rotate <= count_reverse)
+	{
+		i = 0;
+		while (i++ < count_rotate)
+			ft_rotate(a, "a");
+	}
+	else
+	{
+		i = 0;
+		while (i++ <= count_reverse)
+			ft_rrotate(a, "a");
+	}
 }
 
-int	ft_exists_index(int *tab, int size, int element, int index)
+void	ft_locate(t_node **s, int max)
 {
 	int	i;
+	int	count_rotate;
+	int	count_reverse;
 
-	i = index;
-	while (i < size)
+	count_rotate = ft_iter_rotate(s, max);
+	if (count_rotate == 0)
+		return ;
+	count_reverse = ft_iter_reverse(s, max);
+	if (count_rotate <= count_reverse)
 	{
-		if (tab[i] == element)
-			return (1);
-		i++;
+		i = 0;
+		while (i++ < count_rotate)
+			ft_rotate(s, "b");
 	}
-	return (0);
-}
-
-t_node	*ft_max_stack(t_node **a)
-{
-	t_node	*max;
-	t_node	*first;
-
-	max = *a;
-	first = *a;
-	*a = (*a)->next;
-	while (*a != first)
+	else if (count_rotate > count_reverse)
 	{
-		if (max->content < (*a)->content)
-			max = *a;
-		*a = (*a)->next;
+		i = 0;
+		while (i++ < count_reverse + 1)
+			ft_rrotate(s, "b");
 	}
-	return (max);
 }
